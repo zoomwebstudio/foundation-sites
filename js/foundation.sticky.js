@@ -114,35 +114,67 @@
     this.scrollCount = this.options.checkEvery;
     this.isStuck = false;
     // console.log(this.options.anchor, this.options.topAnchor);
-    if(this.options.topAnchor !== ''){
-      this._parsePoints();
-      // console.log(this.points[0]);
-    }else{
-      this.$anchor = this.options.anchor ? $('#' + this.options.anchor) : $(document.body);
-    }
-
+    // if(this.options.topAnchor !== ''){
+    //   this._parsePoints(false);
+    //   // console.log(this.points[0]);
+    // }else if(this.options.anchor){
+    //   this.$anchor = $('#' + this.options.anchor);
+    // }else{
+    //   this._parsePoints(true);
+    // }
+    this._parseThings();
 
     this._setSizes(function(){
       _this._calc(false);
     });
     this._events(id.split('-').reverse().join('-'));
+
+  };
+  Sticky.prototype._parseThings = function(){
+    var breaks = {};
+    if(this.options.anchor !== ''){
+      this.$anchor = $('#' + this.options.anchor);
+      breaks[0] = this.$anchor.offset().top;
+      breaks[1] = breaks[0] + this.$anchor[0].getBoundingClientRect().height - (this.elemHeight);
+    }else if(this.options.topAnchor !== ''){
+      breaks[0] = this._parsePoints(this.options.topAnchor);
+      if(this.options.btmAnchor){
+        breaks[1] = this._parsePoints(this.options.btmAnchor);
+      }else{
+        breaks[1] = document.documentElement.scrollHeight;
+      }
+    }else{
+      breaks[0] = 0;
+      breaks[1] = document.documentElement.scrollHeight;
+    }
+    this.points = breaks;
+    return;
   };
   /**
    * If using multiple elements as anchors, calculates the top and bottom pixel values the sticky thing should stick and unstick on.
    * @function
    * @private
    */
-  Sticky.prototype._parsePoints = function(){
-    var top = this.options.topAnchor,
-        btm = this.options.btmAnchor,
-        pts = [top, btm],
-        breaks = {};
-    for(var i = 0, len = pts.length; i < len && pts[i]; i++){
-      var pt;
-      if(typeof pts[i] === 'number'){
-        pt = pts[i];
+  Sticky.prototype._parsePoints = function(pt){
+    // if(isBody){
+    //   this.points = {
+    //     0: 0,
+    //     1: document.documentElement.scrollHeight
+    //   };
+    //
+    //   console.log('body is points', this.points);
+    //   return;
+    // }
+    // var top = this.options.topAnchor,
+    //     btm = this.options.btmAnchor,
+    //     pts = [top, btm],
+    //     breaks = {};
+    // for(var i = 0, len = pts.length; i < len && pts[i]; i++){
+
+      if(typeof pt === 'number'){
+        pt = pt;
       }else{
-        var place = pts[i].split(':'),
+        var place = pt.split(':'),
             anchor = $('#' + place[0]);
 
         pt = anchor.offset().top;
@@ -150,12 +182,12 @@
           pt += anchor[0].getBoundingClientRect().height;
         }
       }
-      breaks[i] = pt;
-    }
+      // breaks[i] = pt;
+    // }
       // console.log(breaks);
-    this.points = breaks;
+    // this.points = breaks;
     // console.log(this.points);
-    return;
+    return pt;
   };
 
   /**
@@ -299,7 +331,8 @@
     var stickTo = this.options.stickTo,
         stickToTop = stickTo === 'top',
         css = {}, mrgn, notStuckTo,
-        anchorPt = (this.points ? this.points[1] - this.points[0] : this.anchorHeight) - this.elemHeight;
+        anchorPt = (this.points[1] - this.points[0]) - this.elemHeight;
+        anchorPt = ((this.$anchor && this.$anchor.length) ? this.points[1] - this.points[0] : this.anchorHeight) - this.elemHeight;
         mrgn = stickToTop ? 'marginTop' : 'marginBottom';
         notStuckTo = stickToTop ? 'bottom' : 'top';
       css[mrgn] = 0;
@@ -338,12 +371,12 @@
         pdng = parseInt(comp['padding-right'], 10);
 
     // console.log(this.$anchor);
-    if(this.$anchor && this.$anchor.length){
-      this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
-    }else{
-      this._parsePoints();
-    }
-
+    // if(this.$anchor && this.$anchor.length){
+    //   this.anchorHeight = this.$anchor[0].getBoundingClientRect().height;
+    // }else{
+    //   this._parsePoints(this.topAnchor ? false : true);
+    // }
+    this._parseThings();
     this.$element.css({
       'max-width': newElemWidth - pdng + 'px'
     });
@@ -377,8 +410,10 @@
     }
     var mTop = emCalc(this.options.marginTop),
         mBtm = emCalc(this.options.marginBottom),
-        topPoint = this.points ? this.points[0] : this.$anchor.offset().top,
-        bottomPoint = this.points ? this.points[1] : topPoint + this.anchorHeight,
+        topPoint = this.points[0],
+        bottomPoint = this.points[1],
+        // topPoint = this.points ? this.points[0] : this.$anchor.offset().top,
+        // bottomPoint = this.points ? this.points[1] : topPoint + this.anchorHeight,
         // topPoint = this.$anchor.offset().top || this.points[0],
         // bottomPoint = topPoint + this.anchorHeight || this.points[1],
         winHeight = window.innerHeight;
