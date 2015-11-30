@@ -62,9 +62,9 @@
    */
   Drilldown.prototype._init = function(){
     this.$submenuAnchors = this.$element.find('li.has-submenu');
-    this.$submenus = this.$submenuAnchors.children('[data-submenu]').addClass('is-drilldown-sub')/*.wrap($(this.options.wrapper).addClass('is-drilldown-sub'))*/;
+    this.$submenus = this.$submenuAnchors.children('[data-submenu]')//.addClass('is-drilldown-sub')/*.wrap($(this.options.wrapper).addClass('is-drilldown-sub'))*/;
     // this.$rootElems = this.$element.children('[data-submenu]')/*.addClass('first-sub')*/;
-    this.$menuItems = this.$element.find('li').not('.js-drilldown-back').attr('role', 'menuitem');
+    this.$menuItems = this.$element.find('li')//.not('.js-drilldown-back').attr('role', 'menuitem');
     // this.$submenus;
 
 
@@ -81,32 +81,24 @@
    */
   Drilldown.prototype._prepareMenu = function(){
     var _this = this;
-    // if(!this.options.holdOpen){
-    //   this._menuLinkEvents();
-    // }
+
     this.$submenuAnchors.each(function(){
-      var $sub = $(this);
-      $sub.find('a')[0].removeAttribute('href');
-      $sub.children('[data-submenu]')
-          .attr({
-            'aria-hidden': true,
-            'tabindex': 0,
-            'role': 'menu'
-          });
-      _this._events($sub);
+      var $subLink = $(this).children('a:first');
+      $subLink.data('savedHref', $subLink.attr('href')).removeAttr('href');
     });
     this.$submenus.each(function(){
       var $menu = $(this),
           $back = $menu.find('.js-drilldown-back');
       if(!$back.length){
         $menu.prepend(_this.options.backButton);
-        _this._back($menu);
+        // _this._back($menu);
       }
     });
     if(!this.$element.parent().hasClass('is-drilldown')){
       this.$wrapper = $(this.options.wrapper).addClass('is-drilldown').css(this._getMaxDims());
       this.$element.wrap(this.$wrapper);
     }
+    this._events();
 
   };
   /**
@@ -118,27 +110,37 @@
   Drilldown.prototype._events = function($elem){
     var _this = this;
 
-    $elem.off('click.zf.drilldown')
-    .on('click.zf.drilldown', function(e){
-      if($(e.target).parentsUntil('ul', 'li').hasClass('is-drilldown-submenu-parent')){
-        e.stopImmediatePropagation();
+    this.$element.off('click.zf.drilldown').on('click.zf.drilldown', 'a', function(e){
+      var $item = $(this).parent('li');
+      if($item.hasClass('is-drilldown-submenu-parent') || $item.hasClass('js-drilldown-back')){
+        //open menu
         e.preventDefault();
-      }
-
-      // if(e.target !== e.currentTarget.firstElementChild){
-      //   return false;
-      // }
-      _this._show($elem);
-
-      if(_this.options.closeOnClick){
-        var $body = $('body').not(_this.$wrapper);
-        $body.off('.zf.drilldown').on('click.zf.drilldown', function(e){
-          e.preventDefault();
-          _this._hideAll();
-          $body.off('.zf.drilldown');
-        });
+      }else{
+        return;
       }
     });
+
+    // $elem.off('click.zf.drilldown')
+    // .on('click.zf.drilldown', function(e){
+    //   if($(e.target).parentsUntil('ul', 'li').hasClass('is-drilldown-submenu-parent')){
+    //     e.stopImmediatePropagation();
+    //     e.preventDefault();
+    //   }
+    //
+    //   // if(e.target !== e.currentTarget.firstElementChild){
+    //   //   return false;
+    //   // }
+    //   _this._show($elem);
+    //
+    //   if(_this.options.closeOnClick){
+    //     var $body = $('body').not(_this.$wrapper);
+    //     $body.off('.zf.drilldown').on('click.zf.drilldown', function(e){
+    //       e.preventDefault();
+    //       _this._hideAll();
+    //       $body.off('.zf.drilldown');
+    //     });
+    //   }
+    // });
   };
   /**
    * Adds keydown event listener to `li`'s in the menu.
@@ -226,14 +228,14 @@
    * @param {jQuery} $elem - the current sub-menu to add `back` event.
    */
   Drilldown.prototype._back = function($elem){
-    var _this = this;
-    $elem.off('click.zf.drilldown');
-    $elem.children('.js-drilldown-back')
-      .on('click.zf.drilldown', function(e){
-        e.stopImmediatePropagation();
-        // console.log('mouseup on back');
-        _this._hide($elem);
-      });
+    // var _this = this;
+    // $elem.off('click.zf.drilldown');
+    // $elem.children('.js-drilldown-back')
+    //   .on('click.zf.drilldown', function(e){
+    //     e.stopImmediatePropagation();
+    //     // console.log('mouseup on back');
+    //     _this._hide($elem);
+    //   });
   };
   /**
    * Adds event listener to menu items w/o submenus to close open menus on click.
@@ -314,5 +316,5 @@
 
     Foundation.unregisterPlugin(this);
   };
-  Foundation.plugin(Drilldown, 'Drilldown');
+  // Foundation.plugin(Drilldown, 'Drilldown');
 }(jQuery, window.Foundation);
