@@ -242,6 +242,7 @@
    * Removes event handlers for scroll and change events on anchor.
    * @fires Sticky#pause
    * @param {String} scrollListener - unique, namespaced scroll listener attached to `window`
+   * @private
    */
   Sticky.prototype._pauseListeners = function(scrollListener){
     this.isOn = false;
@@ -251,7 +252,6 @@
     /**
      * Fires when the plugin is paused due to resize event shrinking the view.
      * @event Sticky#pause
-     * @private
      */
      this.$element.trigger('pause.zf.sticky');
   };
