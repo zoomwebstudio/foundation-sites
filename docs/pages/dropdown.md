@@ -36,7 +36,7 @@ To create the dropdown trigger, add `data-toggle` to a `<button>`. The value of 
 </div>
 
 
-<button class="button" type="button" data-toggle="example-dropdown-1">Hoverable Dropdown</button>
+<button class="button" type="button" data-toggle="example-dropdown-1" style="transform:translateX(15px)">Hoverable Dropdown</button>
 <div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true">
   Just some junk that needs to be said. Or not. Your choice.
 </div>
@@ -57,11 +57,11 @@ By default, a dropdown anchors below the button that opened it. Add the class `.
 ```
 
 <button class="button" type="button" data-toggle="example-dropdown3" style="float: right;">Left Aligned</button>
-<div class="dropdown-pane left" id="example-dropdown3" data-dropdown>
+<div class="dropdown-pane large left" id="example-dropdown3" data-dropdown>
   Just some junk that needs to be said. Or not. Your choice.
 </div>
 
 <button class="button" type="button" data-toggle="example-dropdown4">Right Aligned</button>
-<div class="dropdown-pane right" id="example-dropdown4" data-dropdown>
+<div class="dropdown-pane right tiny" id="example-dropdown4" data-dropdown>
   Just some junk that needs to be said. Or not. Your choice.
 </div>
