@@ -111,10 +111,11 @@
 
     // var d = Foundation.Box.GetDimensions(this.$anchor);
     this.borderWidth = Math.ceil(parseFloat(window.getComputedStyle(this.$element[0]).borderWidth));
+    // this.dims = {};
     // console.log(this.borderWidth, 'borderWidth');
     this.options.positionClass = this.getPositionClass();
-    this.cacheValues();
-    this._positions();
+    this.cacheValues(true);
+    this._positions(true);
     // this.defaultPos = Foundation.Box.GetOffsets(this.$element, this.$anchor, this.options.positionClass, this.options.vOffset, this.options.hOffset)
     // this.$element.offset(this.defaultPos);
     // this.$element.css('transform', 'translate(' + d.offset.left + 'px, ' + d.offset.top + 'px)');
@@ -135,23 +136,28 @@
     });
 
   };
-  Dropdown.prototype.cacheValues = function(){
+  Dropdown.prototype.cacheValues = function(firstTime){
     var body = document.body,
         docEl = document.documentElement,
         scrollY = window.pageYOffset,
-        scrollX = window.pageXOffset;
+        scrollX = window.pageXOffset,
+        oldLeft = !firstTime ? this.dims.anchorLeft : 0;
+    // this.dims.diff = (this.dims.anchorLeft - this.dims.anchorRect.left + scrollX - this.dims.clientLeft) || 0;
 
     this.dims = {
       paneRect: this.$element[0].getBoundingClientRect(),
       anchorRect: this.$anchor[0].getBoundingClientRect(),
       clientTop: docEl.clientTop || body.clientTop || 0,
       clientLeft: docEl.clientLeft || body.clientLeft || 0,
+      winWidth: window.innerWidth,
+      winHeight: window.innderHeight
     }
     this.dims.anchorTop = this.dims.anchorRect.top + scrollY - this.dims.clientTop;
     this.dims.anchorLeft = this.dims.anchorRect.left + scrollX - this.dims.clientLeft;
     this.dims.paneTop = this.dims.paneRect.top + scrollY - this.dims.clientTop;
     this.dims.paneLeft = this.dims.paneRect.left + scrollX - this.dims.clientLeft;
-    console.log(this.dims);
+    this.dims.diff = this.dims.anchorLeft - oldLeft;
+    console.log(this.dims.diff, 'diff');
 
   };
   Dropdown.prototype.reflow = function(){
@@ -159,8 +165,15 @@
     this._positions();
   };
   Dropdown.prototype._setPosition = function(){
+    // console.log(window.innerWidth);
+    if(window.innerWidth !== this.dims.winWidth){
+      console.log('resetting caches');
+      this.cacheValues();
+    }
+    if(this.isOpen){
+      this._positions();
+    }
 
-    // this._positions();
     // this.cacheValues();
     // var off = this.$anchor.offset();
     // var paneRect = this.$anchor[0].getBoundingClientRect();
@@ -171,30 +184,11 @@
     // this.$element.offset(Foundation.Box.GetOffsets(this.$element, this.$anchor, this.getPositionClass(), this.options.vOffset, this.options.hOffset));
     // console.log(pos);
   };
-  Dropdown.prototype._positionX = function(){
-
-  }
-  Dropdown.prototype._positions = function(){
-    // console.log(window.getComputedStyle(this.$element[0]));
-    // var paneRect = this.$element[0].getBoundingClientRect(),
-    //     anchorRect = this.$anchor[0].getBoundingClientRect(),
-    //     body = document.body,
-    //     docEl = document.documentElement,
-    //     scrollY = window.pageYOffset,
-    //     scrollX = window.pageXOffset,
-    //     clientTop = docEl.clientTop || body.clientTop || 0,
-    //     clientLeft = docEl.clientLeft || body.clientLeft || 0,
-    //     anchorTop = anchorRect.top + scrollY - clientTop,
-    //     anchorLeft = anchorRect.left + scrollX - clientLeft,
-    //     paneTop = paneRect.top + scrollY - clientTop,
-    //     paneLeft = paneRect.left + scrollX - clientLeft,
-        // total = {top: Math.round(top), left: Math.round(anchorLeft)},
+  Dropdown.prototype._positions = function(firstTime){
     var _this = this,
-        dims = this.dims;
-    var beauty;
-    // var beauty = Math.round(paneTop - anchorRect.height - anchorTop - this.options.vOffset);
-    var beast = Math.floor(dims.anchorLeft - dims.paneLeft - this.options.hOffset);
-    // console.log(beast);
+        dims = this.dims,
+        paneLeft = firstTime ? dims.paneLeft : (this.$element[0].style.transform.match(/\d+/)[0] * 1) - this.dims.diff;
+
     var fns = {
       top: function(){
         return {y: Math.round(dims.paneTop + (dims.anchorRect.height * 2) - dims.anchorTop + _this.options.vOffset) + (_this.borderWidth),
@@ -203,21 +197,25 @@
       left: function(){
         // console.log(paneLeft, paneRect.width , anchorRect.width , anchorLeft , _this.options.hOffset);
         return {y: Math.round(dims.paneTop - dims.anchorTop),
-                x: Math.round(dims.anchorLeft - dims.paneLeft - dims.paneRect.width) - _this.options.hOffset - _this.borderWidth};
+                x: Math.round(dims.anchorLeft /*- dims.paneLeft*/ - dims.paneRect.width) - _this.options.hOffset - _this.borderWidth};
       },
       right: function(){
         return {y: Math.round(dims.paneTop - dims.anchorTop),
                 x: Math.round(dims.anchorLeft - dims.paneLeft + dims.anchorRect.width) + _this.options.hOffset};
       },
       '': function(){
+        console.log(paneLeft, 'paneLeft');
         return {y: Math.round(dims.paneTop - dims.anchorRect.height - dims.anchorTop - _this.options.vOffset),
-                x: Math.floor(dims.anchorLeft - dims.paneLeft - _this.options.hOffset) + _this.borderWidth};
+                x: Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth};
       }
-    }
-    beauty = fns[this.getPositionClass()]() || {y:0, x:0};
-    if(beauty.x === 0 && beauty.y === 0){console.log('returning'); return;}
-    console.log(beauty);
-    this.$element[0].style.transform = 'translate(' + beauty.x + 'px,' + -beauty.y + 'px)';
+    };
+
+    var beauty = fns[this.getPositionClass()]() || {y:0, x:0};
+    if(beauty.x === 0 && beauty.y === 0){console.log('no change'); return;}
+    console.log(this.$element[0].style.transform.match(/\d+/));
+    this.$element[0].style.transform = 'translateX(' + beauty.x + 'px) translateY(' + -beauty.y + 'px)';
+    // if(-beauty.y === 0) debugger;
+    // this.$element[0].style.transform = 'translate(' + beauty.x + 'px,' + -beauty.y + 'px)';
 
   };
   /**
