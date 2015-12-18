@@ -206,7 +206,7 @@
       '': function(){
         console.log(paneLeft, 'paneLeft');
         return {y: Math.round(dims.paneTop - dims.anchorRect.height - dims.anchorTop - _this.options.vOffset),
-                x: Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth};
+                x: firstTime ? Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth : _this.cached.x + dims.diff};
       }
     };
 
@@ -214,7 +214,7 @@
     if(beauty.x === 0 && beauty.y === 0){console.log('no change'); return;}
     console.log(this.$element[0].style.transform.match(/\d+/));
     this.$element[0].style.transform = 'translateX(' + beauty.x + 'px) translateY(' + -beauty.y + 'px)';
-    // if(-beauty.y === 0) debugger;
+    this.cached = beauty;
     // this.$element[0].style.transform = 'translate(' + beauty.x + 'px,' + -beauty.y + 'px)';
 
   };
