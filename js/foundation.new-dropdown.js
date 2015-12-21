@@ -85,6 +85,7 @@
    */
   Dropdown.prototype._init = function(){
     var id = this.$element[0].id;
+    this.cached = {y:0,x:0};
     this.$anchor = $('[data-open="' + id + '"], [data-toggle="' + id + '"]');
     var anchLen = this.$anchor.length, anchId;
     if(anchLen){
@@ -150,7 +151,7 @@
       clientTop: docEl.clientTop || body.clientTop || 0,
       clientLeft: docEl.clientLeft || body.clientLeft || 0,
       winWidth: window.innerWidth,
-      winHeight: window.innderHeight
+      winHeight: window.innerHeight
     }
     this.dims.anchorTop = this.dims.anchorRect.top + scrollY - this.dims.clientTop;
     this.dims.anchorLeft = this.dims.anchorRect.left + scrollX - this.dims.clientLeft;
@@ -187,7 +188,8 @@
   Dropdown.prototype._positions = function(firstTime){
     var _this = this,
         dims = this.dims,
-        paneLeft = firstTime ? dims.paneLeft : (this.$element[0].style.transform.match(/\d+/)[0] * 1) - this.dims.diff;
+        paneLeft = dims.paneLeft;
+        // paneLeft = firstTime ? dims.paneLeft : (this.$element[0].style.transform.match(/\d+/)[0] * 1) - this.dims.diff;
 
     var fns = {
       top: function(){
@@ -204,15 +206,18 @@
                 x: Math.round(dims.anchorLeft - dims.paneLeft + dims.anchorRect.width) + _this.options.hOffset};
       },
       '': function(){
-        console.log(paneLeft, 'paneLeft');
-        return {y: Math.round(dims.paneTop - dims.anchorRect.height - dims.anchorTop - _this.options.vOffset),
-                x: firstTime ? Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth : _this.cached.x + dims.diff};
+        console.log(dims);
+        // debugger;
+
+        return {y: Math.round((dims.paneTop + _this.cached.y) - dims.anchorRect.height - dims.anchorTop - _this.options.vOffset),
+                x: Math.floor(dims.anchorLeft - (paneLeft - _this.cached.x) - _this.options.hOffset) + _this.borderWidth};
+                // x: firstTime ? Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth : _this.cached.x + dims.diff};
       }
     };
 
     var beauty = fns[this.getPositionClass()]() || {y:0, x:0};
     if(beauty.x === 0 && beauty.y === 0){console.log('no change'); return;}
-    console.log(this.$element[0].style.transform.match(/\d+/));
+    console.log(beauty, this.cached);
     this.$element[0].style.transform = 'translateX(' + beauty.x + 'px) translateY(' + -beauty.y + 'px)';
     this.cached = beauty;
     // this.$element[0].style.transform = 'translate(' + beauty.x + 'px,' + -beauty.y + 'px)';
