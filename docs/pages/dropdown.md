@@ -16,7 +16,7 @@ To create a dropdown pane, add the class `.dropdown-pane` and the attribute `dat
 To create the dropdown trigger, add `data-toggle` to a `<button>`. The value of `data-toggle` is the ID of the dropdown.
 
 ```html_example
-<!-- <button class="button" type="button" data-toggle="example-dropdown">Toggle Dropdown</button>
+<button class="button" type="button" data-toggle="example-dropdown">Toggle Dropdown</button>
 <div class="dropdown-pane" id="example-dropdown" data-dropdown data-auto-focus="true">
   Example form in a dropdown.
   <form>
@@ -33,7 +33,7 @@ To create the dropdown trigger, add `data-toggle` to a `<button>`. The value of 
       </div>
     </div>
   </form>
-</div> -->
+</div>
 
 
 <button class="button" type="button" data-toggle="example-dropdown-1" style="transform:translateX(15px); float:right;">Hoverable Dropdown</button>
@@ -49,14 +49,14 @@ To create the dropdown trigger, add `data-toggle` to a `<button>`. The value of 
 By default, a dropdown anchors below the button that opened it. Add the class `.top`, `.right`, or `.bottom` to the dropdown to change this.
 
 ```html_example
-<!-- <button class="button" type="button" data-toggle="example-dropdown2">Top Aligned</button>
+<button class="button" type="button" data-toggle="example-dropdown2">Top Aligned</button>
 
 <div class="dropdown-pane top" id="example-dropdown2" data-dropdown>
   Just some junk that needs to be said. Or not. Your choice.
-</div> -->
+</div>
 ```
 
-<!-- <button class="button" type="button" data-toggle="example-dropdown3" style="float: right;">Left Aligned</button>
+<button class="button" type="button" data-toggle="example-dropdown3" style="float: right;">Left Aligned</button>
 <div class="dropdown-pane large left" id="example-dropdown3" data-dropdown>
   Just some junk that needs to be said. Or not. Your choice.
 </div>
@@ -64,4 +64,4 @@ By default, a dropdown anchors below the button that opened it. Add the class `.
 <button class="button" type="button" data-toggle="example-dropdown4">Right Aligned</button>
 <div class="dropdown-pane right tiny" id="example-dropdown4" data-dropdown>
   Just some junk that needs to be said. Or not. Your choice.
-</div> -->
+</div>

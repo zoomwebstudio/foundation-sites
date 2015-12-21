@@ -110,16 +110,12 @@
       'aria-labelledby': anchId
     });
 
-    // var d = Foundation.Box.GetDimensions(this.$anchor);
-    this.borderWidth = Math.ceil(parseFloat(window.getComputedStyle(this.$element[0]).borderWidth));
-    // this.dims = {};
-    // console.log(this.borderWidth, 'borderWidth');
+    var comp = window.getComputedStyle(this.$element[0]);
+    this.borderWidth = comp.borderWidth ? Math.ceil(parseFloat(comp.borderWidth)) : Math.ceil(parseFloat(comp['border-' + (this.getPositionClass() || 'bottom') + '-width']));
+
     this.options.positionClass = this.getPositionClass();
-    this.cacheValues(true);
-    this._positions(true);
-    // this.defaultPos = Foundation.Box.GetOffsets(this.$element, this.$anchor, this.options.positionClass, this.options.vOffset, this.options.hOffset)
-    // this.$element.offset(this.defaultPos);
-    // this.$element.css('transform', 'translate(' + d.offset.left + 'px, ' + d.offset.top + 'px)');
+    this.cacheValues();
+    this._positions();
     this._events();
   };
   /**
@@ -137,13 +133,11 @@
     });
 
   };
-  Dropdown.prototype.cacheValues = function(firstTime){
+  Dropdown.prototype.cacheValues = function(){
     var body = document.body,
         docEl = document.documentElement,
         scrollY = window.pageYOffset,
-        scrollX = window.pageXOffset,
-        oldLeft = !firstTime ? this.dims.anchorLeft : 0;
-    // this.dims.diff = (this.dims.anchorLeft - this.dims.anchorRect.left + scrollX - this.dims.clientLeft) || 0;
+        scrollX = window.pageXOffset;
 
     this.dims = {
       paneRect: this.$element[0].getBoundingClientRect(),
@@ -152,75 +146,56 @@
       clientLeft: docEl.clientLeft || body.clientLeft || 0,
       winWidth: window.innerWidth,
       winHeight: window.innerHeight
-    }
+    };
+
     this.dims.anchorTop = this.dims.anchorRect.top + scrollY - this.dims.clientTop;
     this.dims.anchorLeft = this.dims.anchorRect.left + scrollX - this.dims.clientLeft;
     this.dims.paneTop = this.dims.paneRect.top + scrollY - this.dims.clientTop;
     this.dims.paneLeft = this.dims.paneRect.left + scrollX - this.dims.clientLeft;
-    this.dims.diff = this.dims.anchorLeft - oldLeft;
-    console.log(this.dims.diff, 'diff');
 
+    this.changed = false;
   };
   Dropdown.prototype.reflow = function(){
     this.cacheValues();
     this._positions();
   };
-  Dropdown.prototype._setPosition = function(){
-    // console.log(window.innerWidth);
-    if(window.innerWidth !== this.dims.winWidth){
-      console.log('resetting caches');
-      this.cacheValues();
-    }
-    if(this.isOpen){
-      this._positions();
-    }
-
-    // this.cacheValues();
-    // var off = this.$anchor.offset();
-    // var paneRect = this.$anchor[0].getBoundingClientRect();
-    // console.log(this.$element.offset(), off, this.$element[0].getBoundingClientRect());
-    // this.$element.offset({top: off.top + paneRect.height, left: off.left});
-    // if(!this.$element.hasClass('is-open')) return;
-    // console.log(this.$anchor.offset());
-    // this.$element.offset(Foundation.Box.GetOffsets(this.$element, this.$anchor, this.getPositionClass(), this.options.vOffset, this.options.hOffset));
-    // console.log(pos);
+  Dropdown.prototype._setPosition = function(e){
+    if(e !== undefined){ this.changed = true; }
+    if(this.isOpen){ this._positions(); }
   };
-  Dropdown.prototype._positions = function(firstTime){
+  Dropdown.prototype._positions = function(){
+    console.log('calling');
+    if(this.changed){ this.cacheValues(); }
     var _this = this,
-        dims = this.dims,
-        paneLeft = dims.paneLeft;
-        // paneLeft = firstTime ? dims.paneLeft : (this.$element[0].style.transform.match(/\d+/)[0] * 1) - this.dims.diff;
-
+        dims = this.dims;
+        // console.log(dims);
     var fns = {
       top: function(){
-        return {y: Math.round(dims.paneTop + (dims.anchorRect.height * 2) - dims.anchorTop + _this.options.vOffset) + (_this.borderWidth),
-                x: Math.round(dims.anchorLeft - dims.paneLeft - _this.options.hOffset) + _this.borderWidth};
+        // console.log(dims.paneTop, dims.anchorRect.height * 2, dims.anchorTop, _this.options.vOffset, _this.cached.y, _this.borderWidth);
+        return {y: Math.round(dims.paneTop + (dims.anchorRect.height * 2) - dims.anchorTop + _this.options.vOffset + _this.cached.y + _this.borderWidth),
+                x: Math.round(dims.anchorLeft - dims.paneLeft - _this.options.hOffset + _this.borderWidth)};
       },
       left: function(){
-        // console.log(paneLeft, paneRect.width , anchorRect.width , anchorLeft , _this.options.hOffset);
-        return {y: Math.round(dims.paneTop - dims.anchorTop),
-                x: Math.round(dims.anchorLeft /*- dims.paneLeft*/ - dims.paneRect.width) - _this.options.hOffset - _this.borderWidth};
+        // console.log(dims.paneLeft,'paneleft', dims.paneRect.width,'panewidth' , dims.anchorRect.width,'anchorwidth' , dims.anchorLeft,'anchorleft' , _this.options.hOffset, 'offset');
+        return {y: Math.round(dims.paneTop - dims.anchorTop + _this.cached.y),
+                x: Math.round(dims.anchorLeft - (dims.paneLeft - _this.cached.x) - dims.paneRect.width - _this.options.hOffset - _this.borderWidth)};
       },
       right: function(){
-        return {y: Math.round(dims.paneTop - dims.anchorTop),
-                x: Math.round(dims.anchorLeft - dims.paneLeft + dims.anchorRect.width) + _this.options.hOffset};
+        return {y: Math.round(dims.paneTop - dims.anchorTop + _this.cached.y),
+                x: Math.round(dims.anchorLeft - (dims.paneLeft - _this.cached.x) + dims.anchorRect.width + _this.options.hOffset)};
       },
       '': function(){
-        console.log(dims);
-        // debugger;
-
         return {y: Math.round((dims.paneTop + _this.cached.y) - dims.anchorRect.height - dims.anchorTop - _this.options.vOffset),
-                x: Math.floor(dims.anchorLeft - (paneLeft - _this.cached.x) - _this.options.hOffset) + _this.borderWidth};
-                // x: firstTime ? Math.floor(dims.anchorLeft - paneLeft - _this.options.hOffset) + _this.borderWidth : _this.cached.x + dims.diff};
+                x: Math.round(dims.anchorLeft - (dims.paneLeft - _this.cached.x) - _this.options.hOffset + _this.borderWidth)};
       }
     };
-
-    var beauty = fns[this.getPositionClass()]() || {y:0, x:0};
-    if(beauty.x === 0 && beauty.y === 0){console.log('no change'); return;}
-    console.log(beauty, this.cached);
-    this.$element[0].style.transform = 'translateX(' + beauty.x + 'px) translateY(' + -beauty.y + 'px)';
-    this.cached = beauty;
-    // this.$element[0].style.transform = 'translate(' + beauty.x + 'px,' + -beauty.y + 'px)';
+    var translateVal = fns[this.getPositionClass()]() || {y:0, x:0};
+    if(translateVal.x === 0 && translateVal.y === 0){console.log('no change'); return;}
+    // console.log(translateVal);
+    // this.$element[0].style.transform = 'translateX(' + translateVal.x + 'px) translateY(' + -translateVal.y + 'px)';
+    this.$element[0].style.transform = 'translate(' + translateVal.x + 'px,' + -translateVal.y + 'px)';
+    // console.log('called', this.$element[0].style.transform);
+    this.cached = translateVal;
 
   };
   /**
@@ -242,10 +217,12 @@
   Dropdown.prototype.open = function(){
     this.$element.trigger('closeme.zf.dropdown', this.$element[0].id);
     this.$anchor.attr('aria-expanded', true);
+    if(this.changed){ this._positions(); }
     this._setPosition();
-    // this.$element.slideUp();
+
     this.$element.addClass('is-open')
-        .attr('aria-hidden', false);
+        .attr('aria-hidden', false)
+        .trigger('show.zf.dropdown', [this.$element]);
     this.isOpen = true;
     if(this.options.autoFocus){
       var $focusable = Foundation.Keyboard.findFocusable(this.$element);
