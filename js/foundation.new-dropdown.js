@@ -77,6 +77,7 @@
      */
     autoFocus: false,
     flipAxisOnly: false,
+    closeOnClick: false
   };
   /**
    * Initializes the plugin by setting/checking options and attributes, adding helper variables, and saving the anchor.
@@ -133,6 +134,23 @@
     });
 
   };
+
+  Dropdown.prototype._addBodyHandler = function(){
+    var _this = this;
+    $(document.body).on('click.zf.dropdown', function(e){
+      var $tar = $(e.target)
+      if(_this.$element[0] === e.target || _this.$element.find(e.target).length ||
+        _this.$anchor[0] === e.target || _this.$anchor.find(e.target).length){
+          return;
+      }
+      _this.close();
+    });
+  };
+
+  Dropdown.prototype._removeBodyHandler = function(){
+    $(document.body).off('click.zf.dropdown');
+  };
+
   Dropdown.prototype.cacheValues = function(){
     var body = document.body,
         docEl = document.documentElement,
@@ -155,28 +173,27 @@
 
     this.changed = false;
   };
+
   Dropdown.prototype.reflow = function(){
     this.cacheValues();
     this._positions();
   };
+
   Dropdown.prototype._setPosition = function(e){
     if(e !== undefined){ this.changed = true; }
     if(this.isOpen){ this._positions(); }
   };
   Dropdown.prototype._positions = function(){
-    console.log('calling');
     if(this.changed){ this.cacheValues(); }
     var _this = this,
         dims = this.dims;
-        // console.log(dims);
+
     var fns = {
       top: function(){
-        // console.log(dims.paneTop, dims.anchorRect.height * 2, dims.anchorTop, _this.options.vOffset, _this.cached.y, _this.borderWidth);
         return {y: Math.round(dims.paneTop + (dims.anchorRect.height * 2) - dims.anchorTop + _this.options.vOffset + _this.cached.y + _this.borderWidth),
                 x: Math.round(dims.anchorLeft - dims.paneLeft - _this.options.hOffset + _this.borderWidth)};
       },
       left: function(){
-        // console.log(dims.paneLeft,'paneleft', dims.paneRect.width,'panewidth' , dims.anchorRect.width,'anchorwidth' , dims.anchorLeft,'anchorleft' , _this.options.hOffset, 'offset');
         return {y: Math.round(dims.paneTop - dims.anchorTop + _this.cached.y),
                 x: Math.round(dims.anchorLeft - (dims.paneLeft - _this.cached.x) - dims.paneRect.width - _this.options.hOffset - _this.borderWidth)};
       },
@@ -190,13 +207,11 @@
       }
     };
     var translateVal = fns[this.getPositionClass()]() || {y:0, x:0};
-    if(translateVal.x === 0 && translateVal.y === 0){console.log('no change'); return;}
-    // console.log(translateVal);
-    // this.$element[0].style.transform = 'translateX(' + translateVal.x + 'px) translateY(' + -translateVal.y + 'px)';
-    this.$element[0].style.transform = 'translate(' + translateVal.x + 'px,' + -translateVal.y + 'px)';
-    // console.log('called', this.$element[0].style.transform);
-    this.cached = translateVal;
 
+    if(translateVal.x === 0 && translateVal.y === 0){ return; }
+
+    this.$element[0].style.transform = 'translate(' + translateVal.x + 'px,' + -translateVal.y + 'px)';
+    this.cached = translateVal;
   };
   /**
    * Helper function to determine current orientation of dropdown pane.
@@ -208,6 +223,21 @@
         position = position ? position[0] : '';
     return position;
   };
+  Dropdown.prototype._changePosition = function(){
+    var arrs = {
+      '': ['', 'top', 'left', 'right'],
+      'top': ['top', '', 'left', 'right'],
+      'left': ['left', 'right', '', 'top'],
+      'right': ['right', 'left', '', 'top']
+    },
+        _this = this;
+    arrs[this.options.positionClass].forEach(function(c, i, arr){
+      _this.$element.removeClass(c).addClass(arr[i +1]);
+      _this.changed = true;
+      _this._positions();
+      if(Foundation.Box.ImNotTouchingYou(_this.$element)) return;
+    })
+  };
   /**
    * Opens the dropdown pane, and fires a bubbling event to close other dropdowns.
    * @function
@@ -217,19 +247,27 @@
   Dropdown.prototype.open = function(){
     this.$element.trigger('closeme.zf.dropdown', this.$element[0].id);
     this.$anchor.attr('aria-expanded', true);
+
     if(this.changed){ this._positions(); }
+
     this._setPosition();
+
+    if(!Foundation.Box.ImNotTouchingYou(this.$element)) this._changePosition();
+    console.log(Foundation.Box.ImNotTouchingYou(this.$element));
 
     this.$element.addClass('is-open')
         .attr('aria-hidden', false)
         .trigger('show.zf.dropdown', [this.$element]);
+
     this.isOpen = true;
+
     if(this.options.autoFocus){
       var $focusable = Foundation.Keyboard.findFocusable(this.$element);
       if($focusable.length){
         $focusable.eq(0).focus();
       }
     }
+    if(this.options.closeOnClick) this._addBodyHandler();
   };
 
   /**
@@ -241,9 +279,12 @@
     var $focused = this.$element.find(':focus');
     if($focused.length){ $focused.blur(); }
     this.$element.removeClass('is-open')
-        .attr('aria-hidden', true);
+        .attr('aria-hidden', true)
+        .trigger('hide.zf.dropdown', [this.$element]);
     this.isOpen = false;
     this.$anchor.attr('aria-expanded', false);
+
+    if(this.options.closeOnClick) this._removeBodyHandler();
   };
   /**
    * Toggles the dropdown pane's visibility.
@@ -257,6 +298,8 @@
    * @function
    */
   Dropdown.prototype.destroy = function(){
+    this.close();
+    this.$anchor.off('.zf.dropdown');
     Foundation.unregisterPlugin(this);
   };
 
