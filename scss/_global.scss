@@ -2,6 +2,8 @@
 // foundation.zurb.com
 // Licensed under MIT Open Source
 
+// scss-lint:disable ColorVariable, QualifyingElement, VendorPrefix
+
 ////
 /// @group global
 ////
@@ -108,7 +110,7 @@ $foundation-colors: (
   success: $success-color,
   alert: $alert-color,
   warning: $warning-color,
-);
+) !default;
 
 @mixin foundation-global-styles {
   @include -zf-normalize;
@@ -191,6 +193,15 @@ $foundation-colors: (
     border: 0;
     border-radius: $global-radius;
     line-height: 1;
+  }
+
+  // Internal classes to show/hide elements in JavaScript
+  .is-visible {
+    display: block !important;
+  }
+
+  .is-hidden {
+    display: none !important;
   }
 }
 

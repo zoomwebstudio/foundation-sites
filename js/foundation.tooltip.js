@@ -22,7 +22,7 @@
     this.isClick = false;
     this._init();
 
-    Foundation.registerPlugin(this);
+    Foundation.registerPlugin(this, 'Tooltip');
   }
 
   Tooltip.defaults = {
@@ -78,7 +78,7 @@
     /**
      * Custom template to be used to generate markup for tooltip.
      * @option
-     * @example '<div class="tooltip"></div>'
+     * @example '&lt;div class="tooltip"&gt;&lt;/div&gt;'
      */
     template: '',
     /**
@@ -246,7 +246,7 @@
 
   /**
    * reveals the tooltip, and fires an event to close any other open tooltips on the page
-   * @fires Closeme#tooltip
+   * @fires Tooltip#closeme
    * @fires Tooltip#show
    * @function
    */
@@ -372,7 +372,7 @@
     this.$element
       .on('focus.zf.tooltip', function(e){
         isFocus = true;
-        console.log(_this.isClick);
+        // console.log(_this.isClick);
         if(_this.isClick){
           return false;
         }else{

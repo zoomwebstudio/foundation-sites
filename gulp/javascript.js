@@ -14,8 +14,8 @@ var DEPS = [
 ];
 
 var DOCS = [
-  'node_modules/zeroclipboard/dist/ZeroClipboard.js',
-  'node_modules/typeahead.js/dist/typeahead.bundle.js',
+  'node_modules/clipboard/dist/clipboard.js',
+  'node_modules/corejs-typeahead/dist/typeahead.bundle.js',
   'docs/assets/js/docs.*.js',
   'docs/assets/js/docs.js'
 ];

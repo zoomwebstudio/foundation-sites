@@ -10,7 +10,11 @@ The flex grid works very similarly to the standard float grid, but includes a nu
 
 ## Browser support
 
-The flex grid is only supported in Chrome, Firefox, Safari 6+, IE10+, iOS 7+, and Android 4+. Flexbox is supported in Android 2, but not reliably enough for use with this grid. ([View flexbox browser support.](http://caniuse.com/#feat=flexbox)) We recommend only using the flex grid on projects that can live with purely cutting-edge browser support.
+The flex grid is only supported in Chrome, Firefox, Safari 6+, IE10+, iOS 7+, and Android 4.4+. Flexbox is supported in older versions of Android, but not reliably enough for use with this grid. [View flexbox browser support here.](http://caniuse.com/#feat=flexbox) We recommend only using the flex grid on projects that can live with purely cutting-edge browser support.
+
+<div class="warning callout">
+  <p>In Firefox 43 (the latest version), images in flex columns may overflow their container. To fix this, add a defined <code>width</code> to any images inside a flex column, or use <code>width: 100%</code> for full-bleed images.</p>
+</div>
 
 ---
 
@@ -221,6 +225,55 @@ The same alignment classes can also be applied to individual columns.
   <div class="column align-bottom">Align bottom</div>
   <div class="column align-middle">Align middle</div>
   <div class="column align-top">Align top. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non harum laborum cum voluptate vel, eius adipisci similique dignissimos nobis at excepturi incidunt fugit molestiae quaerat, consequuntur porro temporibus. Nisi, ex?</div>
+</div>
+```
+
+---
+
+## Collapse/Uncollapse Rows
+
+The `.collapse` class lets you remove column gutters (padding).
+
+There are times when you won't want each media query to be collapsed or uncollapsed. In this case, use the media query size you want and collapse or uncollapse and add that to your row element. Example shows no gutter at small media size and then adds the gutter to columns at medium.
+
+```html
+<div class="row medium-uncollapse large-collapse">
+  <div class="small-6 columns">
+    Removes gutter at large media query
+  </div>
+  <div class="small-6 columns">
+    Removes gutter at large media query
+  </div>
+</div>
+```
+
+<p class="lead">Scale the browser down to a medium size to see the difference.</p>
+
+<div class="row medium-uncollapse large-collapse">
+  <div class="small-6 columns">
+    <div class="callout secondary">
+      <p class="show-for-medium-only">On a medium screen, I have gutters!</p>
+      <p class="show-for-large-up">On a large screen, I have no gutters!</p>
+    </div>
+  </div>
+  <div class="small-6 columns">
+    <div class="callout secondary">
+      <p class="show-for-medium-only">On a medium screen, I have gutters!</p>
+      <p class="show-for-large-up">On a large screen, I have no gutters!</p>
+    </div>
+  </div>
+</div>
+
+---
+
+## Offsets
+
+Offsets work identically to the float grid, by applying `margin-left` to a column.
+
+```html_example
+<div class="row">
+  <div class="small-4 large-offset-2 columns">Offset 2 on large</div>
+  <div class="small-4 columns">4 columns</div>
 </div>
 ```
 

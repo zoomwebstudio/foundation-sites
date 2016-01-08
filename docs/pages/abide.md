@@ -19,23 +19,47 @@ These input types create a text field: `text`, `date`, `datetime`, `datetime-loc
   </div>
   <div class="row">
     <div class="small-12 columns">
-      <label>Input Label
-        <input type="text" placeholder=".small-12.columns" aria-describedby="exampleHelpText" required pattern="number">
+      <label>Number Required
+        <input type="text" placeholder="1234" aria-describedby="exampleHelpText" required pattern="number">
         <span class="form-error">
-          Yo, you had better fill this out.
+          Yo, you had better fill this out, it's required.
         </span>
       </label>
       <p class="help-text" id="exampleHelpText">Here's how you use this input field!</p>
     </div>
+    <div class="small-12 columns">
+      <label>Nothing Required!
+        <input type="text" placeholder="Use me, or don't" aria-describedby="exampleHelpTex" data-abide-ignore>
+      </label>
+      <p class="help-text" id="exampleHelpTex">This input is ignored by Abide using `data-abide-ignore`</p>
+    </div>
+    <div class="small-12 columns">
+      <label>Password Required
+        <input type="password" id="password" placeholder="yeti4preZ" aria-describedby="exampleHelpText" required >
+        <span class="form-error">
+          I'm required!
+        </span>
+      </label>
+      <p class="help-text" id="exampleHelpText">Enter a password please.</p>
+    </div>
+    <div class="small-12 columns">
+      <label>Re-enter Password
+        <input type="password" placeholder="yeti4preZ" aria-describedby="exampleHelpText2" required pattern="alpha_numeric" data-equalto="password">
+        <span class="form-error">
+          Hey, passwords are supposed to match!
+        </span>
+      </label>
+      <p class="help-text" id="exampleHelpText2">This field is using the `data-equalto="password"` attribute, causing it to match the password field above.</p>
+    </div>
   </div>
   <div class="row">
     <div class="medium-6 columns">
-      <label>Input Label
-        <input type="text" placeholder=".medium-6.columns" pattern="url">
+      <label>URL Pattern, not required, but throws error if it doesn't match the Regular Expression for a valid URL.
+        <input type="text" placeholder="http://foundation.zurb.com" pattern="url">
       </label>
     </div>
     <div class="medium-6 columns">
-      <label>Input Label
+      <label>European Cars, Choose One, it can't be the blank option.
         <select id="select" required>
           <option value=""></option>
           <option value="volvo">Volvo</option>
@@ -48,13 +72,13 @@ These input types create a text field: `text`, `date`, `datetime`, `datetime-loc
   </div>
   <div class="row">
     <fieldset class="large-6 columns">
-      <legend>Choose Your Favorite</legend>
+      <legend>Choose Your Favorite, and this is required, so you have to pick one.</legend>
       <input type="radio" name="pokemon" value="Red" id="pokemonRed"><label for="pokemonRed">Red</label>
       <input type="radio" name="pokemon" value="Blue" id="pokemonBlue" required><label for="pokemonBlue">Blue</label>
       <input type="radio" name="pokemon" value="Yellow" id="pokemonYellow"><label for="pokemonYellow">Yellow</label>
     </fieldset>
     <fieldset class="large-6 columns">
-      <legend>Choose Your Favorite</legend>
+      <legend>Choose Your Favorite - not required, you can leave this one blank.</legend>
       <input type="radio" name="pockets" value="Red" id="pocketsRed"><label for="pocketsRed">Red</label>
       <input type="radio" name="pockets" value="Blue" id="pocketsBlue"><label for="pocketsBlue">Blue</label>
       <input type="radio" name="pockets" value="Yellow" id="pocketsYellow"><label for="pocketsYellow">Yellow</label>
@@ -131,4 +155,66 @@ These input types create a text field: `text`, `date`, `datetime`, `datetime-loc
     <span class="form-error is-visible" id="uuid">This field is required.</span>
   </label>
 </form>
+```
+## Event Listener
+Setup event listener after foundation is initialized (especially for formvalid/forminvalid). Easier to chain via document selector.
+* valid.zf.abide and invalid.zf.abide are field level events, triggered in validateInput function 
+  *   ev.target is the DOM field element, 
+  *   elem is jQuery selector for field element
+* formvalid.zf.abide and forminvalid.zf.abide are form events, triggered in validateForm function
+  *   ev.target is the DOM form element, 
+  *   frm is jQuery selector for form element
+
+```javascript
+$(document)
+  // field element is invalid
+  .on("invalid.zf.abide", function(ev,elem) {
+    console.log("Field id "+ev.target.id+" is invalid");
+  })
+  // field element is valid
+  .on("valid.zf.abide", function(ev,elem) {
+    console.log("Field name "+elem.attr('name')+" is valid");
+  })
+  // form validation failed
+  .on("forminvalid.zf.abide", function(ev,frm) {
+    console.log("Form id "+ev.target.id+" is invalid");
+  })
+  // form validation passed, form will submit if submit event not returned false
+  .on("formvalid.zf.abide", function(ev,frm) {
+    console.log("Form id "+frm.attr('id')+" is invalid");
+    // ajax post form 
+  })
+  // to prevent form from submitting upon successful validation
+  .on("submit", function(ev) {
+    ev.preventDefault();
+    console.log("Submit for form id "+ev.target.id+" intercepted");
+  });
+// You can bind field or form event selectively
+$("#foo").on("invalid.zf.abide", function(ev,el) {
+  alert("Input field foo is invalid");
+});
+$("#bar").on("formvalid.zf.abide", function(ev,frm) {
+  alert("Form is valid, finally!");
+  // do something perhaps
+});
+  ```
+## Adding Custom Pattern and Validator
+* Override builtin patterns and validators before foundation is initialized
+* Add new patterns and validators before or after foundation is initialized
+
+```javascript
+$(document).foundation();
+Foundation.Abide.defaults.patterns['dashes_only'] = /^[0-9-]*$/;
+Foundation.Abide.defaults.validators['greater_than'] =
+function($el,required,parent) {
+  // parameter 1 is jQuery selector
+  var from = $('#'+$el.attr('data-greater-than')).val(),
+      to = $el.val();
+  return (parseInt(to) > parseInt(from));
+};
+```
+```html
+<input id="phone" type="text" pattern="dashes_only" required >
+<input id="min" type="number" required >
+<input id="max" type="number" data-validator="greater_than" data-greater-than="min" required>
 ```
