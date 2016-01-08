@@ -231,12 +231,20 @@
       'right': ['right', 'left', '', 'top']
     },
         _this = this;
-    arrs[this.options.positionClass].forEach(function(c, i, arr){
-      _this.$element.removeClass(c).addClass(arr[i +1]);
-      _this.changed = true;
-      _this._positions();
-      if(Foundation.Box.ImNotTouchingYou(_this.$element)) return;
-    })
+    for(var i = 0; i < 4; i++){
+      this.$element.removeClass(arrs[this.options.positionClass][i])
+          .addClass(arrs[this.options.positionClass][i+1]);
+      this.changed = true;
+      this._positions();
+      if(Foundation.Box.ImNotTouchingYou(this.$element)) break;
+    }
+    // arrs[this.options.positionClass].forEach(function(c, i, arr){
+    //   console.log('position change');
+    //   _this.$element.removeClass(c).addClass(arr[i +1]);
+    //   _this.changed = true;
+    //   _this._positions();
+    //   if(Foundation.Box.ImNotTouchingYou(_this.$element)) return;
+    // })
   };
   /**
    * Opens the dropdown pane, and fires a bubbling event to close other dropdowns.

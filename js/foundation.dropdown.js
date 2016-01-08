@@ -388,5 +388,5 @@
     Foundation.unregisterPlugin(this);
   };
 
-  Foundation.plugin(Dropdown, 'Dropdown');
+  // Foundation.plugin(Dropdown, 'Dropdown');
 }(jQuery, window.Foundation);
