@@ -64,6 +64,12 @@ $tooltip-radius: $global-radius !default;
   top: calc(100% + #{$tooltip-pip-height});
   max-width: 10rem !important;
   border-radius: $tooltip-radius;
+  margin: 0 auto;
+
+  // &.is-btm {
+    transform: translate(25%, 10px);
+  // }
+
 
   &::before {
     @include css-triangle($tooltip-pip-width, $tooltip-background-color, up);
