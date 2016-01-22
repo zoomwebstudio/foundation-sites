@@ -1,6 +1,7 @@
 /**
  * OffCanvas module.
  * @module foundation.offcanvas
+ * @requires foundation.util.mediaQuery
  * @requires foundation.util.triggers
  * @requires foundation.util.motion
  */
@@ -55,7 +56,7 @@ OffCanvas.defaults = {
    */
   // isSticky: false,
   /**
-   * Allow the offcanvas to remain open for certain breakpoints. Can be used with `isSticky`.
+   * Allow the offcanvas to remain open for certain breakpoints.
    * @option
    * @example false
    */

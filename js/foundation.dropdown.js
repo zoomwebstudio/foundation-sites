@@ -81,7 +81,7 @@
     /**
      * Allows a click on the body to close the dropdown.
      * @option
-     * @example true
+     * @example false
      */
     closeOnClick: false
   };
@@ -120,7 +120,7 @@
    * @returns {String} position - string value of a position class.
    */
   Dropdown.prototype.getPositionClass = function(){
-    var position = this.$element[0].className.match(/(top|left|right)/g);
+    var position = this.$element[0].className.match(/\b(top|left|right)\b/g);
         position = position ? position[0] : '';
     return position;
   };
