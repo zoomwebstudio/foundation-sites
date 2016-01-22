@@ -421,16 +421,14 @@
     if(this.options.animationOut){
       Foundation.Motion.animateOut(this.$element, this.options.animationOut, function(){
         if(_this.options.overlay){
-          Foundation.Motion.animateOut(_this.$overlay, 'fade-out', function(){
-          });
-        }
+          Foundation.Motion.animateOut(_this.$overlay, 'fade-out', finishUp);
+        }else{ finishUp(); }
       });
     }else{
       this.$element.hide(_this.options.hideDelay, function(){
         if(_this.options.overlay){
-          _this.$overlay.hide(0, function(){
-          });
-        }
+          _this.$overlay.hide(0, finishUp);
+        }else{ finishUp(); }
       });
     }
     //conditionals to remove extra event listeners added on open
@@ -441,16 +439,23 @@
       $('body').off('click.zf.reveal');
     }
     this.$element.off('keydown.zf.reveal');
-
-    //if the modal changed size, reset it
-    if(this.changedSize){
-      this.$element.css({
-        'height': '',
-        'width': ''
-      });
+    function finishUp(){
+      //if the modal changed size, reset it
+      if(_this.changedSize){
+        _this.$element.css({
+          'height': '',
+          'width': ''
+        });
+      }
+      $('body').removeClass('is-reveal-open').attr({'aria-hidden': false, 'tabindex': ''});
+      _this.$element.attr({'aria-hidden': true})
+      /**
+      * Fires when the modal is done closing.
+      * @event Reveal#closed
+      */
+      .trigger('closed.zf.reveal');
     }
 
-    $('body').removeClass('is-reveal-open').attr({'aria-hidden': false, 'tabindex': ''});
 
     /**
     * Resets the modal content
@@ -461,12 +466,6 @@
     }
 
     this.isActive = false;
-    this.$element.attr({'aria-hidden': true})
-    /**
-     * Fires when the modal is done closing.
-     * @event Reveal#closed
-     */
-                 .trigger('closed.zf.reveal');
      if(_this.options.deepLink){
        if(window.history.replaceState){
          window.history.replaceState("", document.title, window.location.pathname);
