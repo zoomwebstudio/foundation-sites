@@ -1,7 +1,7 @@
 !function($) {
 "use strict";
 
-var FOUNDATION_VERSION = '6.1.1';
+var FOUNDATION_VERSION = '6.1.2';
 
 // Global Foundation object
 // This is attached to the window, or used as a module for AMD/Browserify
@@ -107,10 +107,12 @@ var Foundation = {
          fns = {
            'object': function(plgs){
              plgs.forEach(function(p){
+               p = hyphenate(p);
                $('[data-'+ p +']').foundation('_init');
              });
            },
            'string': function(){
+             plugins = hyphenate(plugins);
              $('[data-'+ plugins +']').foundation('_init');
            },
            'undefined': function(){
