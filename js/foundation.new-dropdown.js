@@ -207,7 +207,7 @@
       }
     };
     var translateVal = fns[this.getPositionClass()]() || {y:0, x:0};
-
+    var lasso = new Foundation.Lasso(this.$anchor[0], this.$element[0]);
     if(translateVal.x === 0 && translateVal.y === 0){ return; }
 
     this.$element[0].style.transform = 'translate(' + translateVal.x + 'px,' + -translateVal.y + 'px)';
