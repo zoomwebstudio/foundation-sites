@@ -12,7 +12,7 @@ tags:
 
 Commencez par ajouter un élément avec la classe `.row`. Ceci créera un bloc horizontal pour contenir les colonnes verticales. Ensuite ajoutez des éléments ayant des classes `.column` à l'intérieur de ce `.row`. Vous pouvez utiliser `.column` ou  `.columns`&mdash; la seule différence différence réside dans la grammaire. Spécifiez les largeurs (widths) de chaque colonne avec les classes `.small-#`, `.medium-#`, et `.large-#`. 
 
-**Foundation est tout prioritairement mobile.** Codez pour les petit écrans d'abord et les grands écrans hériteront de ces styles. Personnalisez l'affichage sur les écrans de grande tailles quand nécessaires.
+**Foundation est prioritairement mobile.** Codez pour les petit écrans d'abord et les grands écrans hériteront de ces styles. Personnalisez l'affichage sur les écrans de grande tailles quand nécessaires.
 
 ```html
 <div class="row">
