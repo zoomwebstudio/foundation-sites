@@ -1,6 +1,6 @@
 ---
-title: The Grid
-description: Create powerful multi-device layouts quickly and easily with the default 12-column, nestable Foundation grid. If you're familiar with grid systems, you'll feel right at home. If not, you'll learn quickly.
+title: La grille
+description: Créer de puissantes configurations multi-périphériques rapidement et facilement avec une grille Foundation de 12 colonnes emboitables. Si vous êtes familier avec les systèmes de grilles (Grid system), vous vous sentirez comme à la maison. Sinon, vous apprendrez rapidement, car c'est super facile.
 sass:
   - scss/grid/*.scss
   - '!scss/grid/_flex-grid.scss'
@@ -8,11 +8,11 @@ tags:
   - block grid
 ---
 
-## Basics
+## Les bases
 
-Start by adding an element with a class of `.row`. This will create a horizontal block to contain vertical columns. Then add elements with a `.column` class within that row. You can use `.column` or `.columns`&mdash;the only difference is grammar. Specify the widths of each column with the `.small-#`, `.medium-#`, and `.large-#` classes.
+Commencez par ajouter un élément avec la classe `.row`. Ceci créera un bloc horizontal pour contenir les colonnes verticales. Ensuite ajoutez des éléments ayant des classes `.column` à l'intérieur de ce `.row`. Vous pouvez utiliser `.column` ou  `.columns`&mdash; la seule différence différence réside dans la grammaire. Spécifiez les largeurs (widths) de chaque colonne avec les classes `.small-#`, `.medium-#`, et `.large-#`. 
 
-**Foundation is mobile-first.** Code for small screens first, and larger devices will inherit those styles. Customize for larger screens as necessary.
+**Foundation est tout prioritairement mobile.** Codez pour les petit écrans d'abord et les grands écrans hériteront de ces styles. Personnalisez l'affichage sur les écrans de grande tailles quand nécessaires.
 
 ```html
 <div class="row">
@@ -82,7 +82,7 @@ Start by adding an element with a class of `.row`. This will create a horizontal
 
 ---
 
-### Small Grids
+### Petites grilles
 
 Small grids expand to large screens easier than large grids cram into small screens.
 
@@ -108,7 +108,7 @@ Small grids expand to large screens easier than large grids cram into small scre
 
 ---
 
-### Medium Grid
+### Grilles moyennes
 
 Medium sized screens will inherit styles from small, unless you specify a different layout using the medium grid classes.
 
@@ -134,9 +134,9 @@ Medium sized screens will inherit styles from small, unless you specify a differ
 
 ---
 
-## Advanced
+## Avancé
 
-### Combined Column/Row
+### Combinaison de Column/Row
 
 If you need a full-width column to use as a container, put the `.column` and `.row` classes on the same element. You can still nest more grids inside this container like usual.
 
@@ -156,7 +156,7 @@ If you need a full-width column to use as a container, put the `.column` and `.r
 
 ---
 
-### Fluid Row
+### Ligne fluide
 
 Normally, a row is always 1200 pixels wide. Make a row completely fluid by adding the `.expanded` class.
 
@@ -167,7 +167,7 @@ Normally, a row is always 1200 pixels wide. Make a row completely fluid by addin
 
 ---
 
-### Nesting
+### Imbrication (nesting)
 
 You can nest the grids indefinitely, though at a certain point it will get absurd.
 
