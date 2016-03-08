@@ -121,7 +121,7 @@ Ces champs créent un champ d'entrée: `text`, `date`, `datetime`, `datetime-loc
   <textarea type="text" class="is-invalid-input"></textarea>
 </label>
 
-## Initial State
+## Etat initial
 
 ```html
 <form data-abide>
@@ -198,7 +198,7 @@ $("#bar").on("formvalid.zf.abide", function(ev,frm) {
   // do something perhaps
 });
   ```
-## Adding Custom Pattern and Validator
+## Ajout d'un modèle personnalisé et de validateur
 * Override builtin patterns and validators before foundation is initialized
 * Add new patterns and validators before or after foundation is initialized
 
