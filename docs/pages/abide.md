@@ -10,7 +10,7 @@ tags:
 
 ### Abide Demo
 
-These input types create a text field: `text`, `date`, `datetime`, `datetime-local`, `email`, `month`, `number`, `password`, `search`, `tel`, `time`, `url`, and `week`.
+Ces champs créent un champ d'entrée: `text`, `date`, `datetime`, `datetime-local`, `email`, `month`, `number`, `password`, `search`, `tel`, `time`, `url`, et `week`.
 
 ```html_example
 <form data-abide novalidate>
@@ -105,19 +105,19 @@ These input types create a text field: `text`, `date`, `datetime`, `datetime-loc
 <p>&nbsp;</p>
 
 <div class="alert callout">
-  <p><i class="fi-alert"></i> There are some errors in your form.</p>
+  <p><i class="fi-alert"></i> Il y a des erreurs dans le formulaire.</p>
 </div>
 
 <label class="is-invalid-label">
-  Required Thing
+  Champ requis
   <input type="text" class="is-invalid-input">
   <span class="form-error is-visible">
-    Yo, you had better fill this out.
+    Hé, tu devrais remplir ce champ
   </span>
 </label>
 
 <label class="is-invalid-label">
-  Required Thing
+  Champ requis
   <textarea type="text" class="is-invalid-input"></textarea>
 </label>
 
@@ -127,36 +127,36 @@ These input types create a text field: `text`, `date`, `datetime`, `datetime-loc
 <form data-abide>
   <!-- Add "display: none" right away -->
   <div data-abide-error class="alert callout" style="display: none;">
-    <p><i class="fi-alert"></i> There are some errors in your form.</p>
+    <p><i class="fi-alert"></i>  Il y a des erreurs dans le formulaire.</p>
   </div>
   <label>
-    Name
+    Nom
     <input type="text" required>
-    <span class="form-error">This field is required.</span>
+    <span class="form-error">Ce champ est obligatoire.</span>
   </label>
 </form>
 ```
 
-## Error State
+## Etat d'erreur
 
 ```html
 <form data-abide>
   <!-- Add role="alert" -->
   <!-- Add "display: block" -->
   <div data-abide-error role="alert" class="alert callout" style="display: block;">
-    <p><i class="fi-alert"></i> There are some errors in your form.</p>
+    <p><i class="fi-alert"></i> Il y a des erreurs dans le formulaire.</p>
   </div>
   <!-- Add "is-invalid-label" -->
   <label class="is-invalid-label">
-    Name
+    Nom
     <!-- Add "is-invalid-input" -->
     <input type="text" class="is-invalid-input" required aria-invalid aria-describedby="uuid">
     <!-- Add "is-visible" -->
-    <span class="form-error is-visible" id="uuid">This field is required.</span>
+    <span class="form-error is-visible" id="uuid">Ce champ est requis.</span>
   </label>
 </form>
 ```
-## Event Listener
+## Ecouteurs d'événements
 Setup event listener after foundation is initialized (especially for formvalid/forminvalid). Easier to chain via document selector.
 * valid.zf.abide and invalid.zf.abide are field level events, triggered in validateInput function 
   *   ev.target is the DOM field element, 
