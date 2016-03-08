@@ -108,6 +108,7 @@ Ces champs créent un champ d'entrée: `text`, `date`, `datetime`, `datetime-loc
   <p><i class="fi-alert"></i> Il y a des erreurs dans le formulaire.</p>
 </div>
 
+```html
 <label class="is-invalid-label">
   Champ requis
   <input type="text" class="is-invalid-input">
@@ -120,7 +121,7 @@ Ces champs créent un champ d'entrée: `text`, `date`, `datetime`, `datetime-loc
   Champ requis
   <textarea type="text" class="is-invalid-input"></textarea>
 </label>
-
+```
 ## Etat initial
 
 ```html
