@@ -1,22 +1,23 @@
-# [Foundation for Sites](http://foundation.zurb.com)
+# [Foundation pour les sites internet](http://foundation.zurb.com)
 
 [![npm version](https://badge.fury.io/js/foundation-sites.svg)](https://badge.fury.io/js/foundation-sites) [![Bower version](https://badge.fury.io/bo/foundation-sites.svg)](https://badge.fury.io/bo/foundation-sites) [![Gem Version](https://badge.fury.io/rb/foundation-rails.svg)](https://badge.fury.io/rb/foundation-rails) [![devDependency Status](https://david-dm.org/zurb/foundation-sites/dev-status.svg)](https://david-dm.org/zurb/foundation-sites#info=devDependencies) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/zurb/foundation-sites?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-Foundation is the most advanced responsive front-end framework in the world. Quickly go from prototype to production, building sites or apps that work on any kind of device with Foundation. Includes a fully customizable, responsive grid, a large library of Sass mixins, commonly used JavaScript plugins, and full accessibility support.
+Fondation est le framework responsive front-end le plus avancé au monde. Avec lui, passez rapidement du prototype à la production, en créant des sites ou des applications qui fonctionnent sur tout type d'appareil.
+Foundation inclut une grille entièrement personnalisable et adaptable à tout type d'écran, une grande bibliothèque de mixins Sass (pre-processeur CSS), des extensions JavaScript couramment utilisés, et un support total de l'accessibilité.
 
-## Getting Started
+## Démarrage
 
-The quickest way to get started is with the [basic CSS download](http://foundation.zurb.com/sites/download/). You can get versions with every component, essential ones only, or a custom build.
+La manière la plus rapide de démarrer avec Foundation est d'utiliser la [version CSS basique (à télécharger ici)](http://foundation.zurb.com/sites/download/). Vous pouvez télécharger des versions de Foundation différentes : avec tous les composants, seulement les essentiels ou une version personnalisée.
 
-If you're a Sass user, we have two starter project templates, the [Basic Template](https://github.com/zurb/foundation-sites-template) and the [ZURB Template](https://github.com/zurb/foundation-zurb-template). You can install them by manually downloading them from GitHub, or using the [Foundation CLI](https://github.com/zurb/foundation-cli).
+Si vous êtes un utilisateur Sass, Foundation dispose de modèles de démarrage, le [Modèle de base (Basic Template)](https://github.com/zurb/foundation-sites-template) et le [ZURB Template](https://github.com/zurb/foundation-zurb-template). Vous pouvez les installer manuellement en téléchargeant depuis GitHub, ou en utilisant l'Interface de commande en ligne [Foundation CLI](https://github.com/zurb/foundation-cli).
 
-Lastly, if you're rolling your own setup, you can install Foundation through a variety of [package managers](http://foundation.zurb.com/sites/docs/installation.html#package-managers).
+Enfin, si vous réalisez votre propre installation, vous pouvez installer Foundation en passant par une variété de gestionnaires de [gestionaires de packages](http://foundation.zurb.com/sites/docs/installation.html#package-managers).
 
 ## Documentation
 
-The documentation can be found at <https://foundation.zurb.com/sites/docs>. To run the documentation locally on your machine, you need [Node.js](https://nodejs.org/en/) and [Ruby](https://www.ruby-lang.org/en/) installed on your computer. (Your Node.js version must be 0.12 or higher.)
+La documentation est disponible à l'adresse <https://foundation.zurb.com/sites/docs>. Pour disposer de la version locale de la documentation sur votre machine, vous aurez besoin d'installer [Node.js](https://nodejs.org/en/) et [Ruby](https://www.ruby-lang.org/en/) sur votre ordinateur. (Votre version de Node.js doit être supérieure ou égale à la version 0.12.)
 
-Run these commands to set up the documentation:
+Lancez ces commandes pour installer la documentation sur votre machine:
 
 ```bash
 git clone https://github.com/zurb/foundation-sites
@@ -25,20 +26,20 @@ gem install scss-lint
 npm install
 ```
 
-Then run `npm start` to compile the documentation. When it finishes, a new browser window will open pointing to a BrowserSync server displaying the documentation.
+Ensuite lancer `npm start` pour compiler la documentation. Quand cela est fini, une fenêtre de navigateur qui affichera la documentation s'ouvrira. Cette page pointera vers un serveur BrowserSync.
 
 ## Testing
 
-Foundation has three kinds of tests: JavaScript, Sass, and visual regression. Refer to our [testing guide](https://github.com/zurb/foundation-sites/wiki/Testing-Guide) for more details.
+Foundation dispose de trois types de tests : JavaScript, Sass, and visual regression. Referrez-vous à notre [Guide de tests](https://github.com/zurb/foundation-sites/wiki/Testing-Guide) pour plus de détails.
 
-These commands will run the various tests:
+Voici les commandes qui exécuterons les différents tests:
 
 - `npm run test:sass`
 - `npm run test:javascript`
 - `npm run test:visual`
 
-## Contributing
+## Contribuer
 
-Check out our [contributing guide](http://foundation.zurb.com/develop/contribute.html) to learn how you can contribute to Foundation. You can also browse the [Help Wanted](https://github.com/zurb/foundation-sites/labels/help%20wanted) tag in our issue tracker to find things to do.
+Jettez un coup d'oeil à notre [guide de contribution](http://foundation.zurb.com/develop/contribute.html) pour apprendre comment vous pouvez contribuer au développement de Foundation. Vous pouvez également parcourir l'étiquette [Help Wanted](https://github.com/zurb/foundation-sites/labels/help%20wanted) de notre tracker de problèmes pour trouver ce qu'il faut faire.
 
 Copyright (c) 2016 ZURB, inc.
